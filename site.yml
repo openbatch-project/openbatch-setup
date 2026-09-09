@@ -1,1 +1,4 @@
----\n- import_playbook: playbooks/01-network-config.yaml\n- import_playbook: playbooks/02-slurm-config.yaml\n- import_playbook: playbooks/03-deploy-openbatch.yaml
+---
+- import_playbook: playbooks/01-network-config.yaml
+- import_playbook: playbooks/02-slurm-config.yaml
+- import_playbook: playbooks/03-deploy-openbatch.yaml
