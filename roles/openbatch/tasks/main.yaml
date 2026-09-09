@@ -68,17 +68,23 @@
   become: yes
   become_user: "{{ openbatch_user }}"
 
-- name: Instalar dependências do projeto com NPM
+- name: Instalar dependências do Frontend
   community.general.npm:
-    path: "{{ openbatch_install_dir }}/openbatch"
+    path: "{{ openbatch_install_dir }}/frontend"
   become: yes
   become_user: "{{ openbatch_user }}"
 
-- name: Construir a aplicação (npm run build)
+- name: Instalar dependências do Backend
+  community.general.npm:
+    path: "{{ openbatch_install_dir }}/backend"
+  become: yes
+  become_user: "{{ openbatch_user }}"
+
+- name: Construir a aplicação (Frontend)
   ansible.builtin.command:
     cmd: npm run build
-    chdir: "{{ openbatch_install_dir }}/openbatch"
-    creates: "{{ openbatch_install_dir }}/openbatch/dist"
+    chdir: "{{ openbatch_install_dir }}/frontend"
+    creates: "{{ openbatch_install_dir }}/frontend/dist"
   become: yes
   become_user: "{{ openbatch_user }}"
 

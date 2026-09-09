@@ -60,7 +60,7 @@ ansible-playbook playbooks/02-slurm-config.yaml --ask-become-pass
 ```
 
 ### Fase 3: Aplicação OpenBatch
-Instala o Node.js, ClamAV, compila o painel frontend e configura o serviço via systemd no Manager para inicializar o OpenBatch.
+Baixa o código da aplicação, instala as dependências (separadamente para o `frontend` e `backend`), compila o painel React e configura o serviço Node.js no systemd. Também instala e configura o ClamAV no Manager.
 
 ```bash
 ansible-playbook playbooks/03-deploy-openbatch.yaml --ask-become-pass

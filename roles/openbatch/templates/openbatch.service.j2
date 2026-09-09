@@ -18,13 +18,13 @@ After=network.target slurmctld.service
 Type=simple
 User=root
 Group=root
-WorkingDirectory={{ openbatch_install_dir }}/openbatch
+WorkingDirectory={{ openbatch_install_dir }}/backend
 
 # Passa a porta como uma variável de ambiente para a aplicação Node.js
 Environment="PORT={{ openbatch_port }}"
 
 # O comando para iniciar o servidor
-ExecStart=/usr/bin/node server.js
+ExecStart=/usr/bin/node src/server.js
 Restart=on-failure
 RestartSec=10
 
