@@ -10,13 +10,13 @@ Este repositório contém os scripts e playbooks do **Ansible** responsáveis pe
 
 ## 1. Configuração do Inventário
 
-Crie o arquivo de inventário local a partir do exemplo fornecido:
+A estrutura de inventários foi separada por ambiente (ex: `production`, `lab`). Crie o arquivo de inventário do seu ambiente a partir do exemplo fornecido:
 
 ```bash
-cp inventory.example.ini inventory.ini
+cp inventories/production/hosts.example.ini inventories/production/hosts.ini
 ```
 
-Em seguida, edite o arquivo `inventory.ini` preenchendo os IPs e variáveis de acordo com o seu ambiente:
+Em seguida, edite o arquivo `inventories/production/hosts.ini` preenchendo os IPs e variáveis de acordo com o seu ambiente:
 
 ```ini
 [slurm_controller]
@@ -35,13 +35,19 @@ db_password="sua_senha_segura"
 
 ## 2. Execução dos Playbooks
 
-A implantação é dividida em 3 fases para facilitar o troubleshooting e garantir estabilidade:
+Você pode rodar todo o provisionamento de uma vez só através do Master Playbook `site.yml`, que já sabe buscar o inventário configurado em `ansible.cfg` (por padrão apontando para `production/hosts.ini`):
+
+```bash
+ansible-playbook site.yml --ask-become-pass
+```
+
+Ou, caso prefira executar cada fase isoladamente para facilitar o troubleshooting, os playbooks estão na pasta `playbooks/`:
 
 ### Fase 1: Rede Base
 Configura IPs estáticos e resolução de nomes (`/etc/hosts`) em todos os nós do cluster.
 
 ```bash
-ansible-playbook 01-network-config.yaml --ask-become-pass
+ansible-playbook playbooks/01-network-config.yaml --ask-become-pass
 ```
 
 > **Nota:** A conexão SSH pode cair momentaneamente durante a troca de IP se a rede estiver sendo reconfigurada para a mesma interface conectada.
@@ -50,12 +56,12 @@ ansible-playbook 01-network-config.yaml --ask-become-pass
 Instala e configura o Munge, Slurm (Controller, DBD e Daemons), MariaDB, além de configurar as restrições de Cgroups e limites de segurança (limits.conf).
 
 ```bash
-ansible-playbook 02-slurm-config.yaml --ask-become-pass
+ansible-playbook playbooks/02-slurm-config.yaml --ask-become-pass
 ```
 
 ### Fase 3: Aplicação OpenBatch
 Instala o Node.js, ClamAV, compila o painel frontend e configura o serviço via systemd no Manager para inicializar o OpenBatch.
 
 ```bash
-ansible-playbook 03-deploy-openbatch.yaml --ask-become-pass
+ansible-playbook playbooks/03-deploy-openbatch.yaml --ask-become-pass
 ```
